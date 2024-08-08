@@ -19,7 +19,7 @@ const Anime = ({ params }: { params: { slug: string } }) => {
   return (
     <main>
       <NavbarReuseble />
-      {/* <HeroSection
+      <HeroSection
         imageUrl={data?.imageUrl || ""}
         title={data?.title}
         year={data?.aired?.split(" ")[2]}
@@ -31,7 +31,7 @@ const Anime = ({ params }: { params: { slug: string } }) => {
         isLoading={isLoading}
         selfLink={data?.selfLink}
       />
-      <Recomendation /> */}
+      {/* <Recomendation /> */}
     </main>
   );
 };

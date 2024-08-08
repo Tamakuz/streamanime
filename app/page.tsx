@@ -6,7 +6,7 @@ export default function Home() {return (
     <main>
       <NavbarReuseble />
       <div className="container grid grid-cols-12 gap-3 pb-10">
-        {/* <AnimeList /> */}
+        <AnimeList />
         {/* <GenreList /> */}
       </div>
     </main>

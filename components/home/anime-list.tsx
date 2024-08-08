@@ -42,14 +42,14 @@ const AnimeList = () => {
 
   return (
     <div className="col-span-9 grid grid-cols-5 gap-5">
-      {/* {anime.map((anime, index) => (
+      {anime.map((anime, index) => (
         <CardListReuseble key={index} anime={anime} />
       ))}
       <div ref={ref} className="col-span-4 flex justify-center items-center">
         {isLoading && (
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-t-2 border-gray-300 dark:border-gray-600"></div>
         )}
-      </div> */}
+      </div>
     </div>
   );
 }

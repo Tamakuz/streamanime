@@ -20,7 +20,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      {/* <div className="relative">
+      <div className="relative">
         <Image
           src={anime.imageUrl || ""}
           alt={anime.title || ""}
@@ -42,7 +42,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {anime.episode}
+          {anime.episodeCount}
         </motion.div>
         <motion.div 
           className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-card to-transparent"
@@ -51,7 +51,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           transition={{ duration: 0.5 }}
         ></motion.div>
       </div>
-      <Link href={`/anime/${anime.selfUrl}`} className="h-[80px] text-card-foreground shadow-sm p-2 flex flex-col justify-between">
+      <Link href={`/anime/${anime.selfLink}`} className="h-[80px] text-card-foreground shadow-sm p-2 flex flex-col justify-between">
         <motion.h3 
           className="text-sm font-medium line-clamp-2"
           initial={{ opacity: 0 }}
@@ -70,9 +70,8 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           <span className="text-muted-foreground">
             <Dot />
           </span>
-          <span className="text-muted-foreground">{anime.season}</span>
         </motion.div>
-      </Link> */}
+      </Link>
     </motion.div>
   );
 };

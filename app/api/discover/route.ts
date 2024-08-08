@@ -4,7 +4,7 @@ import cheerio from "cheerio";
 
 export interface AnimeData {
   title: string;
-  link: string;
+  selfLink: string;
   imageUrl: string;
   episodeCount: number;
   rating: number;
@@ -22,12 +22,13 @@ export const GET = async (req: NextRequest) => {
     const data: AnimeData[] = $('.bsx').map((_, element) => {
       const title = $(element).find('.inf a').attr('title') || '';
       const link = $(element).find('.inf a').attr('href') || '';
+      const selfLink = link.replace('https://riie.stream/anime/', '').replace('/', '');
       const imageUrl = $(element).find('.thumb img').attr('src') || '';
       const episodeCount = parseInt($(element).find('.inf span:contains("Ep")').text().replace('Ep', '').trim()) || 0;
       const rating = parseFloat($(element).find('.inf span:contains("Star")').text().replace('Star :', '').trim()) || 0;
       return {
         title,
-        link,
+        selfLink,
         imageUrl,
         episodeCount,
         rating

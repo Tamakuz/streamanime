@@ -84,7 +84,7 @@ const HeroSection = ({
             </div>
             <div className="flex items-center gap-2">
               <div className="px-2 rounded-md border border-muted-foreground">
-                {quality}
+                HD
               </div>
               {genres?.map((genre: Genre, index: number) => (
                 <span key={index}>
