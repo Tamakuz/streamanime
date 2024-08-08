@@ -21,6 +21,8 @@ const AnimeList = () => {
     isLoading: boolean;
   };
 
+  console.log(error);
+
   React.useEffect(() => {
     if (inView && !isLoading) {
       setPage((prevPage) => prevPage + 1);
