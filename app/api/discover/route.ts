@@ -3,14 +3,11 @@ import axios, { AxiosError } from "axios";
 import cheerio from "cheerio";
 
 export interface AnimeData {
-  imageUrl: string;
   title: string;
-  japaneseTitle: string;
-  season: string;
-  rating: string;
-  episode: string;
-  selfUrl: string;
-  type: string;
+  link: string;
+  imageUrl: string;
+  episodeCount: number;
+  rating: number;
 }
 
 export const dynamic = "force-dynamic";
@@ -18,37 +15,24 @@ export const dynamic = "force-dynamic";
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page") || "1";
   try {
-    const url = `https://zoronime.com/home/page/${page}`;
+    const url = `https://riie.stream/page/${page}`;
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
-    const data: AnimeData[] = [];
-
-    $('.flw-item').each((index, element) => {
-      const imageUrl = $(element).find('img.film-poster-img').attr('data-src') || $(element).find('img.film-poster-img').attr('src');
-      const title = $(element).find('a.film-poster-ahref').attr('title');
-      const japaneseTitle = $(element).find('a.film-poster-ahref').attr('data-jname');
-      const season = $(element).find('.fd-infor .fdi-item a').attr('title');
-      const rating = $(element).find('.tick-item-sub').text().trim();
-      const episode = $(element).find('.tick-item').text().trim();
-      const href = $(element).find('a.film-poster-ahref').attr('href');
-      let selfUrl = '';
-      let type = '';
-
-      if (href) {
-        if (href.includes('/anime/')) {
-          selfUrl = href.replace('https://zoronime.com/anime/', '').replace('/', '');
-          type = 'anime';
-        } else if (href.includes('/movie/')) {
-          selfUrl = href.replace('https://zoronime.com/movie/', '').replace('/', '');
-          type = 'movie';
-        }
-      }
-
-      if (imageUrl && title && japaneseTitle && season && rating && episode && selfUrl && type) {
-        data.push({ imageUrl, title, japaneseTitle, season, rating, episode, selfUrl, type });
-      }
-    });
+    const data: AnimeData[] = $('.bsx').map((_, element) => {
+      const title = $(element).find('.inf a').attr('title') || '';
+      const link = $(element).find('.inf a').attr('href') || '';
+      const imageUrl = $(element).find('.thumb img').attr('src') || '';
+      const episodeCount = parseInt($(element).find('.inf span:contains("Ep")').text().replace('Ep', '').trim()) || 0;
+      const rating = parseFloat($(element).find('.inf span:contains("Star")').text().replace('Star :', '').trim()) || 0;
+      return {
+        title,
+        link,
+        imageUrl,
+        episodeCount,
+        rating
+      };
+    }).get();
 
     return NextResponse.json(data);
   } catch (error) {
