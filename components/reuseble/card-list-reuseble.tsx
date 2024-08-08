@@ -20,7 +20,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <div className="relative">
+      {/* <div className="relative">
         <Image
           src={anime.imageUrl || ""}
           alt={anime.title || ""}
@@ -72,7 +72,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           </span>
           <span className="text-muted-foreground">{anime.season}</span>
         </motion.div>
-      </Link>
+      </Link> */}
     </motion.div>
   );
 };
