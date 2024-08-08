@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import cheerio from "cheerio";
 
 export interface AnimeData {
@@ -50,7 +50,12 @@ export const GET = async (req: NextRequest) => {
 
     return NextResponse.json(data);
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
+    if (error instanceof AxiosError) {
+      console.error(`AxiosError: ${error.message}`);
+      return NextResponse.json({ error: "Failed to fetch data from the server" }, { status: error.response?.status || 500 });
+    } else {
+      console.error(`Unexpected error: ${error}`);
+      return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 });
+    }
   }
 };
