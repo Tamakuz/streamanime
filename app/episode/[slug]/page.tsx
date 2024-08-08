@@ -35,7 +35,7 @@ const Episode = ({ params }: { params: { slug: string } }) => {
   return (
     <main>
       <NavbarReuseble />
-      <div className="container mx-auto px-4 py-4">
+      {/* <div className="container mx-auto px-4 py-4">
         <div className="grid grid-cols-10 gap-3">
           <div className="col-span-8">
             <div className="aspect-video">
@@ -60,7 +60,7 @@ const Episode = ({ params }: { params: { slug: string } }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </main>
   );
 };
