@@ -13,9 +13,11 @@ export interface AnimeData {
   type: string;
 }
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (req: NextRequest) => {
+  const page = req.nextUrl.searchParams.get("page") || "1";
   try {
-    const page = req.nextUrl.searchParams.get("page") || "1";
     const url = `https://zoronime.com/home/page/${page}`;
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
