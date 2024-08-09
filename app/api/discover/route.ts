@@ -7,7 +7,7 @@ export interface AnimeData {
   selfLink: string;
   imageUrl: string;
   episodeCount: number;
-  rating: number;
+  status: string;
 }
 
 export const dynamic = "force-dynamic";
@@ -15,23 +15,23 @@ export const dynamic = "force-dynamic";
 export const GET = async (req: NextRequest) => {
   const page = req.nextUrl.searchParams.get("page") || "1";
   try {
-    const url = `https://riie.stream/page/${page}`;
+    const url = `https://v5.animasu.cc/pencarian/?urutan=populer&halaman=${page}`;
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
     const data: AnimeData[] = $('.bsx').map((_, element) => {
-      const title = $(element).find('.inf a').attr('title') || '';
-      const link = $(element).find('.inf a').attr('href') || '';
-      const selfLink = link.replace('https://riie.stream/anime/', '').replace('/', '');
-      const imageUrl = $(element).find('.thumb img').attr('src') || '';
-      const episodeCount = parseInt($(element).find('.inf span:contains("Ep")').text().replace('Ep', '').trim()) || 0;
-      const rating = parseFloat($(element).find('.inf span:contains("Star")').text().replace('Star :', '').trim()) || 0;
+      const title = $(element).find('.tt').text().trim() || '';
+      const link = $(element).find('a').attr('href') || '';
+      const selfLink = link.replace('https://v5.animasu.cc/anime/', '').replace('/', '');
+      const imageUrl = $(element).find('img.lazy').attr('data-src') || '';
+      const episodeCount = parseInt($(element).find('.epx').text().replace('Episode', '').trim()) || 0;
+      const status = $(element).find('.sb').text().trim() || 'Unknown';
       return {
         title,
         selfLink,
         imageUrl,
         episodeCount,
-        rating
+        status
       };
     }).get();
 

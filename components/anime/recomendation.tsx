@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Recomendation = () => {
-  const [randomPage] = useState(Math.floor(Math.random() * 100) + 1);
+  const [randomPage] = useState(Math.floor(Math.random() * 20) + 1);
   const {
     data,
     error,
@@ -21,9 +21,11 @@ const Recomendation = () => {
     isLoading: boolean;
   };
 
+  console.log(data);
+
   return (
     <motion.div 
-      className="container mx-auto py-8 space-y-4"
+      className="mx-auto py-8 space-y-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
@@ -37,7 +39,7 @@ const Recomendation = () => {
         Rekomendasi Anime
       </motion.h1>
       <motion.div 
-        className="grid grid-cols-6 gap-4"
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

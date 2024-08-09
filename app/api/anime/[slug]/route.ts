@@ -2,6 +2,8 @@ import axios from "axios";
 import cheerio from "cheerio";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 export type Genre = {
   name: string;
   selfLink: string;
@@ -17,58 +19,53 @@ export interface AnimeData {
   title: string;
   malScore: string;
   rating: string;
-  premiered: string;
+  characteristics: string[];
   aired: string;
-  type: string;
+  year: string;
   genres: Genre[];
   synopsis: string;
-  status: string;
+  type: string;
   alternativeTitle: string;
   quality: string;
-  dub: string;
+  author: string;
   duration: string;
-  episodes: Episode[];
   selfLink: string;
+  lastUpdated: string;
 }
 
 export const GET = async (req: NextRequest, { params }: { params: { slug: string } }) => {
   const slug = params.slug;
-  const url = `https://riie.stream/anime/${slug}`;
+  const url = `https://v5.animasu.cc/anime/${slug}`;
 
   try {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
-    const imageUrl = $('.thumb[itemprop="image"] img').attr('src');
-    const title = $('h1[itemprop="name"]').text().trim();
-    const malScore = $('.spe').find('span').first().text().split(': ')[1]?.trim() || '';
-    const rating = $('.spe').find('span').eq(1).text().split(': ')[1]?.trim() || '';
-    const premiered = $('.spe').find('span').eq(2).text().split(': ')[1]?.trim() || '';
+    const imageUrl = $('.thumb[itemprop="image"] img').attr('data-src');
+    const title = $('h1[itemprop="headline"]').text().trim();
+    const malScore = $('.rating strong').text().trim();
+    const rating = $('.rating strong').text().split(' ')[1]?.trim() || '';
+    const characteristics = $('#tikar_shw a').map((_, element) => $(element).text().trim()).get();
     const aired = $('.spe').find('span').eq(3).text().split(': ')[1]?.trim() || '';
-    const type = $('.spe').find('span').eq(4).text().split(': ')[1]?.trim() || '';
-    const synopsis = $('.entry-content[itemprop="description"]').text().trim();
-    const status = $('.spe').find('span').eq(5).text().split(': ')[1]?.trim() || '';
+    const year = $('.spe').find('span').eq(4).text().split(': ')[1]?.trim() || '';
+    const synopsis = $('.desc[itemprop="mainContentOfPage"]').find('p').first().text().trim().replace(" [Ditulis oleh Animasu Menulis Ulang]", '').replace(" [Ditulis oleh Animasu Menulis kembali]", '')
+    const type = $('.spe').find('span').eq(5).text().split(': ')[1]?.trim() || '';
     const alternativeTitle = $('.alter').text().trim();
     const quality = $('.spe').find('span').eq(6).text().split(': ')[1]?.trim() || '';
-    const dub = $('.spe').find('span').eq(7).text().split(': ')[1]?.trim() || '';
+    const author = $('.spe').find('span').eq(7).text().split(': ')[1]?.trim() || '';
     const duration = $('.spe').find('span').eq(8).text().split(': ')[1]?.trim() || '';
+    const lastUpdated = $('.spe').find('time[itemprop="dateModified"]').attr('datetime') || '';
+    const selfLinkElement = $('.bigcover .ime a.lnk').attr('href');
+    const selfLink = selfLinkElement ? selfLinkElement.replace('https://v5.animasu.cc/', '').replace('/', '') : '';
 
     const genres: Genre[] = [];
-    $('.genxed a').each((index, element) => {
+    $('.spe span:first-of-type a').each((index, element) => {
       const genreName = $(element).text().trim();
-      const genreUrl = $(element).attr('href')?.replace('https://riie.stream/genre/', '').replace('/', '') || '';
+      const genreUrl = $(element).attr('href')?.replace('https://v5.animasu.cc/genre/', '').replace('/', '') || '';
       genres.push({ name: genreName, selfLink: genreUrl });
     });
 
-    const episodes: Episode[] = [];
-    $('.eplister ul li a').each((index, element) => {
-      const episodeNumber = $(element).find('.epl-num').text().trim();
-      const episodeLink = $(element).attr('href') || '';
-      const episodeSelfLink = episodeLink.replace('https://riie.stream/episode/', '').replace('/', '');
-      episodes.push({ number: episodeNumber, selfLink: episodeSelfLink });
-    });
-
-    const animeData: AnimeData = { imageUrl, title, malScore, rating, premiered, aired, type, genres, synopsis, status, alternativeTitle, quality, dub, duration, episodes, selfLink: slug };
+    const animeData: AnimeData = { imageUrl, title, malScore, rating, characteristics, aired, year, genres, synopsis, type , alternativeTitle, quality, author, duration, selfLink, lastUpdated };
 
     return NextResponse.json(animeData);
   } catch (error) {

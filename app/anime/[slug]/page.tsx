@@ -16,13 +16,16 @@ const Anime = ({ params }: { params: { slug: string } }) => {
     fetcher
   ) as { data: AnimeData; isLoading: boolean; error: any };
 
+  const RecomendationMemo = React.memo(Recomendation);
+  const HeroSectionMemo = React.memo(HeroSection);
+
   return (
     <main>
       <NavbarReuseble />
-      <HeroSection
+      <HeroSectionMemo
         imageUrl={data?.imageUrl || ""}
         title={data?.title}
-        year={data?.aired?.split(" ")[2]}
+        year={data?.year?.split(" ")[2]}
         quality={data?.quality}
         genres={data?.genres}
         synopsis={data?.synopsis}
@@ -31,7 +34,9 @@ const Anime = ({ params }: { params: { slug: string } }) => {
         isLoading={isLoading}
         selfLink={data?.selfLink}
       />
-      {/* <Recomendation /> */}
+      <div className="container mx-auto">
+        <RecomendationMemo />
+      </div>
     </main>
   );
 };

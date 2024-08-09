@@ -8,6 +8,9 @@ export default function Home() {return (
       <div className="container grid grid-cols-12 gap-3 pb-10">
         <AnimeList />
         {/* <GenreList /> */}
+        <div>
+          genres
+        </div>
       </div>
     </main>
   );

@@ -34,16 +34,18 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {anime.rating}
+          {anime.status}
         </motion.div>
-        <motion.div 
-          className="absolute bottom-2 left-2 z-10 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-sm"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {anime.episodeCount}
-        </motion.div>
+        {anime.episodeCount > 0 && (
+          <motion.div 
+            className="absolute bottom-2 left-2 z-10 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-sm"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            {anime.episodeCount}
+          </motion.div>
+        )}
         <motion.div 
           className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-card to-transparent"
           initial={{ opacity: 0 }}
