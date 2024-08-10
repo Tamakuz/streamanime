@@ -3,13 +3,13 @@ import React from "react";
 import useSWR from "swr";
 import axios from "axios";
 import { Badge } from "../ui/badge";
-import { Genre } from "@/app/api/genres/route";
+import { IGenre } from "@/model/anime.model";
 
 const ChipReuseble = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
   const { data: genres, isLoading } = useSWR("/api/genres", fetcher) as {
-    data: Genre[];
+    data: IGenre[];
     isLoading: boolean;
   };
 
@@ -27,7 +27,7 @@ const ChipReuseble = () => {
     <div className="flex flex-wrap gap-2 sticky top-5">
       {genres.map((genre, index) => (
         <Badge variant={"secondary"} className="cursor-pointer" key={index}>
-          {genre.label}
+          {genre.name}
         </Badge>
       ))}
     </div>
