@@ -1,12 +1,12 @@
   import { NextRequest, NextResponse } from "next/server";
   import EpisodeModel from "@/model/episode.model";
-
-  export const dynamic = "force-dynamic";
+import { connectDB } from "@/config/db";
 
   export const GET = async (
     req: NextRequest,
     { params }: { params: { slug: string } }
   ): Promise<NextResponse<any>> => {
+    await connectDB();
     const episodeSelfLink = params.slug;
 
     try {

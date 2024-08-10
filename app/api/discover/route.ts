@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import axios, { AxiosError } from "axios";
 import cheerio from "cheerio";
 import DiscoverModel from "@/model/discover.model";
+import { connectDB } from "@/config/db";
 
 export interface AnimeData {
   title: string;
@@ -11,9 +12,8 @@ export interface AnimeData {
   status: string;
 }
 
-export const dynamic = "force-dynamic";
-
 export const GET = async (req: NextRequest) => {
+  await connectDB();
   try {
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1");
     const limit = 20;
