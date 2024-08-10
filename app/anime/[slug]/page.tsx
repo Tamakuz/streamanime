@@ -5,8 +5,8 @@ import useSWR from "swr";
 import axios from "axios";
 import NavbarReuseble from "@/components/reuseble/navbar-reuseble";
 import HeroSection from "@/components/anime/hero";
-import { AnimeData } from "@/app/api/anime/[slug]/route";
 import Recomendation from "@/components/anime/recomendation";
+import { IAnime } from "@/model/anime.model";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -14,7 +14,7 @@ const Anime = ({ params }: { params: { slug: string } }) => {
   const { data, error, isLoading } = useSWR(
     `/api/anime/${params.slug}`,
     fetcher
-  ) as { data: AnimeData; isLoading: boolean; error: any };
+  ) as { data: IAnime; isLoading: boolean; error: any };
 
   const RecomendationMemo = React.memo(Recomendation);
   const HeroSectionMemo = React.memo(HeroSection);
@@ -25,12 +25,12 @@ const Anime = ({ params }: { params: { slug: string } }) => {
       <HeroSectionMemo
         imageUrl={data?.imageUrl || ""}
         title={data?.title}
-        year={data?.year?.split(" ")[2]}
-        quality={data?.quality}
+        year={data?.year?.split(" ")[2]!}
+        quality={data?.quality!}
         genres={data?.genres}
-        synopsis={data?.synopsis}
-        type={data?.type}
-        releaseDate={data?.aired}
+        synopsis={data?.synopsis || ""}
+        type={data?.type || ""}
+        releaseDate={data?.aired || ""}
         isLoading={isLoading}
         selfLink={data?.selfLink}
       />

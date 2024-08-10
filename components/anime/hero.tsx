@@ -4,9 +4,9 @@ import React from "react";
 import Image from "next/image";
 import { Dot, Play } from "lucide-react";
 import { motion } from "framer-motion";
-import { Genre } from "@/app/api/anime/[slug]/route";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
+import { IGenre } from "@/model/anime.model";
 
 interface HeroSectionProps {
   imageUrl: string;
@@ -76,17 +76,17 @@ const HeroSection = ({
           >
             <div className="flex items-center gap-2">
               <h1 className="text-5xl font-bold text-card-foreground">
-                {title}
+                {title}{" "}
+                <span className="text-[30px] text-muted-foreground">
+                  ({year})
+                </span>
               </h1>
-              <span className="text-[30px] text-muted-foreground">
-                ({year})
-              </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="px-2 rounded-md border border-muted-foreground">
                 HD
               </div>
-              {genres?.map((genre: Genre, index: number) => (
+              {genres?.map((genre: IGenre, index: number) => (
                 <span key={index}>
                   {genre.name}
                   {index < genres.length - 1 ? ", " : ""}

@@ -1,82 +1,22 @@
-import axios from "axios";
-import cheerio from "cheerio";
-import { NextRequest, NextResponse } from "next/server";
+  import { NextRequest, NextResponse } from "next/server";
+  import EpisodeModel from "@/model/episode.model";
 
-export const dynamic = "force-dynamic";
+  export const dynamic = "force-dynamic";
 
-interface Episode {
-  episodeNumber: string;
-  episodeLink: string;
-  episodeTitle: string;
-}
+  export const GET = async (
+    req: NextRequest,
+    { params }: { params: { slug: string } }
+  ): Promise<NextResponse<any>> => {
+    const episodeSelfLink = params.slug;
 
-interface StreamSource {
-  src: string;
-  resolution: string;
-  serverName: string;
-}
-
-export interface StreamData {
-  sources: StreamSource[];
-  episodes: Episode[];
-}
-
-export interface StreamsResponse {
-  streams: StreamData[];
-  error?: string;
-}
-
-export const GET = async (
-  req: NextRequest,
-  { params }: { params: { slug: string } }
-): Promise<NextResponse<any>> => {
-  const slug = params.slug;
-  const url = `https://v5.animasu.cc/${slug}`;
-
-  try {
-    const { data } = await axios.get(url);
-    const $ = cheerio.load(data);
-
-    // Extract episodes
-    const episodes: Episode[] = [];
-    $('#daftarepisode li').each((_, elem) => {
-      const episodeLink = $(elem).find('a').attr('href')?.replace('https://v5.animasu.cc/', '').replace('/', '');
-      const episodeTitle = $(elem).find('a').text();
-      const episodeNumberMatch = episodeTitle.match(/\d+/);
-      const episodeNumber = episodeNumberMatch ? episodeNumberMatch[0] : 'Unknown';
-      if (episodeLink && episodeTitle) {
-        episodes.push({ episodeNumber, episodeLink, episodeTitle });
+    try {
+      const episode = await EpisodeModel.findOne({ "episodes.episodeSelfLink": episodeSelfLink });
+      if (!episode) {
+        return NextResponse.json({ error: "Episode not found" }, { status: 404 });
       }
-    });
-
-    // Extracting video options
-    const options = $('select.mirror option').toArray();
-    const sources: StreamSource[] = options.map((option, index) => {
-      const encodedSrc = $(option).attr('value');
-      const serverName = `Server ${index}`;
-
-      if (encodedSrc) {
-        const decodedHtml = Buffer.from(encodedSrc, 'base64').toString('ascii');
-        const iframeSrc = cheerio.load(decodedHtml)('iframe').attr('src');
-        const resolutionMatch = $(option).text().trim().match(/(\d+p)/);
-        const resolution = resolutionMatch ? resolutionMatch[0] : 'Unknown';
-
-        return {
-          src: iframeSrc,
-          resolution: resolution,
-          serverName: serverName
-        };
-      }
-      return null;
-    }).filter((source): source is StreamSource => source !== null);
-
-    const streamData: StreamData = {
-      sources: sources,
-      episodes: episodes
-    };
-
-    return NextResponse.json(streamData);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch data" });
-  }
-};
+      const specificEpisode = episode.episodes.find((ep: any) => ep.episodeSelfLink === episodeSelfLink);
+      return NextResponse.json(episode);
+    } catch (error) {
+      return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
+    }
+  };
