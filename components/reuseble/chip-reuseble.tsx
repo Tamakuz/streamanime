@@ -3,7 +3,7 @@ import React from "react";
 import useSWR from "swr";
 import axios from "axios";
 import { Badge } from "../ui/badge";
-import { IGenre } from "@/model/anime.model";
+import { IGenre } from "@/models/anime.model";
 
 const ChipReuseble = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
@@ -13,15 +13,20 @@ const ChipReuseble = () => {
     isLoading: boolean;
   };
 
-  if (isLoading) return (
-    <div className="flex flex-wrap gap-2 sticky top-5">
-      {Array.from({ length: 10 }).map((_, index) => (
-        <Badge key={index} variant="secondary" className="w-full animate-pulse">
-          &nbsp;
-        </Badge>
-      ))}
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="flex flex-wrap gap-2 sticky top-5">
+        {Array.from({ length: 10 }).map((_, index) => (
+          <Badge
+            key={index}
+            variant="secondary"
+            className="w-full animate-pulse"
+          >
+            &nbsp;
+          </Badge>
+        ))}
+      </div>
+    );
 
   return (
     <div className="flex flex-wrap gap-2 sticky top-5">

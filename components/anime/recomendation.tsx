@@ -1,11 +1,11 @@
 "use client";
-import { AnimeData } from '@/app/api/discover/route';
 import React, { useState, useEffect } from 'react'
 import useSWR from 'swr';
 import CardListReuseble from '../reuseble/card-list-reuseble';
 import axios from 'axios';
 import { Skeleton } from '../ui/skeleton';
 import { motion } from 'framer-motion';
+import { IAnime } from '@/types/anime.type';
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -15,13 +15,11 @@ const Recomendation = () => {
     data,
     error,
     isLoading,
-  } = useSWR(`/api/discover?page=${randomPage}`, fetcher) as {
-    data: AnimeData[];
+  } = useSWR(`/api/anime-list?page=${randomPage}&limit=22`, fetcher) as {
+    data: any;
     error: any;
     isLoading: boolean;
   };
-
-  console.log(data);
 
   return (
     <motion.div 
@@ -49,7 +47,7 @@ const Recomendation = () => {
             <Skeleton key={index} className="w-full h-[300px] rounded-lg" />
           ))
         ) : (
-          data?.map((recommendation: any, index: number) => (
+          data?.animes?.map((recommendation: any, index: number) => (
             <motion.div 
               key={index}
               initial={{ opacity: 0, y: 20 }}

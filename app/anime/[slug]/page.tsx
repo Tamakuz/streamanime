@@ -6,7 +6,6 @@ import axios from "axios";
 import NavbarReuseble from "@/components/reuseble/navbar-reuseble";
 import HeroSection from "@/components/anime/hero";
 import Recomendation from "@/components/anime/recomendation";
-import { IAnime } from "@/model/anime.model";
 
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
@@ -14,28 +13,25 @@ const Anime = ({ params }: { params: { slug: string } }) => {
   const { data, error, isLoading } = useSWR(
     `/api/anime/${params.slug}`,
     fetcher
-  ) as { data: IAnime; isLoading: boolean; error: any };
-
-  const RecomendationMemo = React.memo(Recomendation);
-  const HeroSectionMemo = React.memo(HeroSection);
+  ) as { data: any; isLoading: boolean; error: any };
 
   return (
     <main>
       <NavbarReuseble />
-      <HeroSectionMemo
+      <HeroSection
         imageUrl={data?.imageUrl || ""}
         title={data?.title}
-        year={data?.year?.split(" ")[2]!}
-        quality={data?.quality!}
-        genres={data?.genres}
+        year={data?.aired?.split(" ")[2]!}
+        genres={data?.genres!}
+        author={data?.author}
         synopsis={data?.synopsis || ""}
         type={data?.type || ""}
         releaseDate={data?.aired || ""}
         isLoading={isLoading}
-        selfLink={data?.selfLink}
+        selfLink={data?.episodes[0].urlSlug}
       />
       <div className="container mx-auto">
-        <RecomendationMemo />
+        <Recomendation />
       </div>
     </main>
   );

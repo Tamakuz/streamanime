@@ -2,19 +2,19 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import useSWR from 'swr'
-import { AnimeData } from '@/app/api/discover/route'
 import CardListReuseble from '@/components/reuseble/card-list-reuseble'
 import { useInView } from 'react-intersection-observer';
+import { IAnime } from '@/types/anime.type'
 
 const AnimeList = () => {
   const fetcher = (url: string) => axios.get(url).then((res) => res.data);
   const [page, setPage] = useState(1);
-  const [anime, setAnime] = useState<AnimeData[]>([]);
+  const [anime, setAnime] = useState<IAnime[]>([]);
   const { ref, inView } = useInView();
 
-  const { error, isLoading } = useSWR(`/api/discover?page=${page}`, fetcher, {
+  const { error, isLoading } = useSWR(`/api/anime-list?page=${page}`, fetcher, {
     onSuccess: (data) => {
-      setAnime((prevAnime) => [...prevAnime, ...data]);
+      setAnime((prevAnime) => [...prevAnime, ...data.animes]);
     }
   }) as {
     error: any;
@@ -38,7 +38,7 @@ const AnimeList = () => {
         ></div>
       ))}
     </div>
-  );;
+  );
 
   return (
     <div className="col-span-9 grid grid-cols-5 gap-5">

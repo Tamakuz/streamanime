@@ -6,14 +6,13 @@ import { Dot, Play } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "../ui/skeleton";
 import Link from "next/link";
-import { IGenre } from "@/model/anime.model";
 
 interface HeroSectionProps {
   imageUrl: string;
   title: string;
   year: string;
-  quality: string;
   genres: any;
+  author: string;
   synopsis: string;
   type: string;
   releaseDate: string;
@@ -25,8 +24,8 @@ const HeroSection = ({
   imageUrl,
   title,
   year,
-  quality,
   genres,
+  author,
   synopsis,
   type,
   releaseDate,
@@ -36,6 +35,8 @@ const HeroSection = ({
   if (isLoading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
+  console.log(genres);
+  
 
   return (
     <motion.div
@@ -64,18 +65,18 @@ const HeroSection = ({
               src={imageUrl}
               alt="anime"
               width={200}
-              height={100}
-              className="w-full object-cover rounded-md"
+              height={200}
+              className="w-full h-auto object-cover rounded-md"
             />
           </motion.div>
           <motion.div
-            className="col-span-8 p-5 space-y-1"
+            className="col-span-8 p-5 space-y-2"
             initial={{ x: 50, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
             <div className="flex items-center gap-2">
-              <h1 className="text-5xl font-bold text-card-foreground">
+              <h1 className="text-5xl font-bold text-card-foreground leading-8">
                 {title}{" "}
                 <span className="text-[30px] text-muted-foreground">
                   ({year})
@@ -86,12 +87,14 @@ const HeroSection = ({
               <div className="px-2 rounded-md border border-muted-foreground">
                 HD
               </div>
-              {genres?.map((genre: IGenre, index: number) => (
-                <span key={index}>
-                  {genre.name}
-                  {index < genres.length - 1 ? ", " : ""}
-                </span>
-              ))}
+              <span>{author}</span>
+              <div className="flex flex-wrap gap-1">
+                {genres.map((genre: { name: string }) => (
+                  <span key={genre.name} className="px-1 py-0.5 bg-primary text-primary-foreground rounded-md text-xs">
+                    {genre.name}
+                  </span>
+                ))}
+              </div>
             </div>
             <div className="flex items-center gap-5 py-4">
               <motion.button
@@ -99,7 +102,7 @@ const HeroSection = ({
                 whileTap={{ scale: 0.95 }}
               >
                 <Link
-                  href={`/episode/${selfLink}`}
+                  href={`/episode/${title}/${selfLink}`}
                   className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-md shadow-md"
                 >
                   <Play className="w-5 h-5" />

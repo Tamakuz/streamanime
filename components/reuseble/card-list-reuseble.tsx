@@ -1,18 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { AnimeData } from "@/app/api/discover/route";
 import Link from "next/link";
 import { Dot, Play } from "lucide-react";
 import { Badge } from "../ui/badge";
+import { IAnime } from "@/types/anime.type";
 
 interface CardListReusebleProps {
-  anime: AnimeData;
+  anime: IAnime;
 }
 
 const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
   return (
-    <motion.div 
+    <motion.div
       className="relative border group rounded-md bg-card w-full overflow-hidden shadow-lg group"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -28,33 +28,36 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           height={250}
           className="object-cover w-full h-[250px]"
         />
-        <motion.div 
+        <motion.div
           className="absolute bottom-2 right-2 z-10 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-sm"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {anime.status}
+          {anime.rating}
         </motion.div>
-        {anime.episodeCount > 0 && (
-          <motion.div 
+        {anime.episodes.length > 0 && (
+          <motion.div
             className="absolute bottom-2 left-2 z-10 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-md shadow-sm"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            {anime.episodeCount}
+            {anime.episodes.length}
           </motion.div>
         )}
-        <motion.div 
+        <motion.div
           className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-card to-transparent"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         ></motion.div>
       </div>
-      <Link href={`/anime/${anime.selfLink}`} className="h-[80px] text-card-foreground shadow-sm p-2 flex flex-col justify-between">
-        <motion.h3 
+      <Link
+        href={`/anime/${anime.slug}`}
+        className="h-[80px] text-card-foreground shadow-sm p-2 flex flex-col justify-between"
+      >
+        <motion.h3
           className="text-sm font-medium line-clamp-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -62,7 +65,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
         >
           {anime.title}
         </motion.h3>
-        <motion.div 
+        <motion.div
           className="text-xs flex items-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -72,6 +75,7 @@ const CardListReuseble: React.FC<CardListReusebleProps> = ({ anime }) => {
           <span className="text-muted-foreground">
             <Dot />
           </span>
+          <span className="text-muted-foreground">{anime.season}</span>
         </motion.div>
       </Link>
     </motion.div>
